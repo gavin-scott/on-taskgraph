@@ -98,6 +98,11 @@ net-tools
         @virtualization-tools
     <% } %>
 <% } %>
+<% if (typeof packages !== 'undefined') { %>
+<%   for (var i = 0, len = packages.length; i < len; i++) { %>
+<%= packages[i] %>
+<%   } %>
+<% } %>
 %end
 
 %pre
@@ -145,6 +150,11 @@ export PATH
     <% if (typeof domain !== 'undefined') { %>
         echo -e "NETWORKING=yes\nHOSTNAME=<%=hostname%>.<%=domain%>" > /etc/sysconfig/network
     <% } %>
+<% } %>
+
+# Cleanup non-installation disks
+<% if ( cleanupDisks !== 'undefined' ) { %>
+    for disk in $(ls -1 /dev/sd* | grep -v <%= installDisk %> | egrep -v [0-9] ); do dd if=/dev/zero of=$disk bs=1M ; done
 <% } %>
 
 # Setup static network configuration
